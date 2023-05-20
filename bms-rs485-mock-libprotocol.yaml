@@ -1,0 +1,38 @@
+esphome:
+  name: bms-libprotocol-handler
+  includes:
+    - component/sdragos_mppsolar/BMSLibProtocolUARTHandler.cpp
+    - component/sdragos_mppsolar/BMSLibProtocolUARTHandler.h
+    - component/sdragos_mppsolar/BMSLibProtocolDataAdapter.h
+    - component/sdragos_mppsolar/BMSLibProtocolMockDataAdapter.h
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+
+wifi:
+  ap:
+    ssid: StefanTestComms
+    password: abcdefghijklmnop!
+
+ota:
+  password: ""
+
+logger:
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+  stop_bits: 1
+
+custom_component:
+- lambda: |-
+    auto my_custom = new sdragos::mppsolar::BMSLibProtocolUARTHandler(id(uart_bus));
+    auto dataAdapter = new sdragos::mppsolar::BMSLibProtocolMockDataAdapter();
+    my_custom->setDataAdapter(dataAdapter);
+    return {my_custom};
