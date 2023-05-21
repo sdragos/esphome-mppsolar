@@ -13,13 +13,22 @@ esp32:
     sdkconfig_options:
       CONFIG_FREERTOS_UNICORE: y
 
-wifi:
-  ap:
-    ssid: StefanTestComms
-    password: abcdefghijklmnop!
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret home_assistant_api_key
 
 ota:
-  password: ""
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: !secret wifi_fallback_ssid
+    password: !secret wifi_fallback_password
 
 logger:
 
